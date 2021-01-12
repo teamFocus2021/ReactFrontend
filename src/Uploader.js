@@ -2,9 +2,15 @@
 import React from 'react';
 import Dropzone from 'react-dropzone-uploader'
 import 'react-dropzone-uploader/dist/styles.css'
+import "./dropbox.css"
 
   const Uploader = () => {
-    const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
+    const getUploadParams = ({ meta }) => {
+      const url = 'https://httpbin.org/post'
+      return { 
+        url, meta: { fileUrl: `${url}/${encodeURIComponent(meta.name)}` }
+      }
+    }
   
     // called every time a file's `status` changes
     const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
@@ -20,7 +26,12 @@ import 'react-dropzone-uploader/dist/styles.css'
         getUploadParams={getUploadParams}
         onChangeStatus={handleChangeStatus}
         onSubmit={handleSubmit}
-        accept="image/*,audio/*,video/*"
+        accept="video/*"
+        inputContent={(files, extra) => (extra.reject ? 'video files only' : 'Drag Files')}
+        styles={{
+          dropzoneReject: { borderColor: 'red', backgroundColor: '#DAA' },
+          inputLabel: (files, extra) => (extra.reject ? { color: 'red' } : {}),
+        }}
       />
     )
   }
